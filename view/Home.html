@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Journal Home</title>
+	<meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+	
+    <link href="../static/css/HomeStyleSheet.css" rel="stylesheet" />
+	<script>
+		$(document).ready(function(){
+
+			 var clientId = "918979086033-9p2hr58bh6jl4ks68v73o66u2bb2sn0e.apps.googleusercontent.com";
+			 var redirect_uri = "http://localhost:8888/Drive";
+			 var scope = "https://www.googleapis.com/auth/drive";
+			 var url = "";
+
+			 $("#login").click(function(){
+				signIn(clientId,redirect_uri,scope,url);
+			 });
+
+			 function signIn(clientId,redirect_uri,scope,url){
+				url = "https://accounts.google.com/o/oauth2/v2/auth?redirect_uri="+redirect_uri
+				+"&prompt=consent&response_type=code&client_id="+clientId+"&scope="+scope
+				+"&access_type=offline";
+				window.location = url;
+			 }
+			 
+			 function linkclick(){
+			 
+				signIn(clientId,redirect_uri,scope,url);
+			 }
+
+		});
+	
+	
+	</script>
+	
+</head>
+
+<body>
+    <div class="header">
+        <img src="https://cdn4.iconfinder.com/data/icons/small-n-flat/24/notepad-512.png" />
+        
+        <span id="head">Journal Home</span>
+    </div>
+    
+
+    <div class="sidenav">
+        <a style="color: darksalmon;" href="#home">>&nbsp<i class="fas fa-home"></i>&nbsp Home</a>
+        <a href="http://localhost:8888/Notepad">&nbsp<i class="fas fa-edit"></i>&nbsp Editor</a>
+        <a href="http://localhost:8888/MyFiles">&nbsp<i class="fas fa-file-alt"></i>&nbsp&nbsp My files</a>
+		<a href="http://localhost:8888/SharedWithMe">&nbsp<i class="fas fa-users"></i>&nbsp&nbspShared With Me</a>
+		<a href="http://localhost:8888/Uploadfiles">&nbsp<i class="fa fa-upload" aria-hidden="true"></i>&nbsp&nbspUpload</a>
+		<a href="http://localhost:8888/Home/logout">&nbsp<i class="fas fa-sign-out-alt"></i>&nbsp&nbsp Logout</a>
+    </div>
+
+    <div class="main">
+
+        <h3 style="margin-top:10px;">Create and Edit Documents</h3>
+       <div> <p>You can invite other users for collaborative editing</p>
+        <p>Get Started Now!</p></div>
+        <div style="display: inline-block" id="create-doc">
+            <a href="http://localhost:8888/Notepad">
+                <img class="create-img" src="../static/images/create.jpg" />
+            </a>
+            <a href="http://localhost:8888/Notepad">Create a new document</a>
+        </div>
+		
+		<div style="display: inline-block;" id="create-doc">
+           <img  style="padding-top: 18px" id="login" src="https://miro.medium.com/max/980/1*ZikDBIgFQ-HuxDM0RwBiKQ.png"/>
+		   <a  >Authenticate google drive</a>
+        </div>
+
+        <p style="margin-top: 30px">Open your files to see a list of documents you have saved</p>
+        <p>Open the documents shared with you, to see their latest updates</p>
+		<p>To upload your files to drive, first authenticate your drive through the link above</p>
+
+    </div>
+
+</body>
+</html>

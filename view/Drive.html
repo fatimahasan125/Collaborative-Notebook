@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <link href="../static/css/upload.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script> 
+		$(document).ready(function(){
+    
+
+			const urlParams = new URLSearchParams(window.location.search);
+			const code = urlParams.get('code');
+			const redirect_uri = "http://localhost:8888/Drive" // replace with your redirect_uri;
+			const client_secret = "8I3WCm6nEb-RDWwNbpsPYpQW"; // replace with your client secret
+			const scope = "https://www.googleapis.com/auth/drive";
+			var access_token= "";
+			var client_id = "918979086033-9p2hr58bh6jl4ks68v73o66u2bb2sn0e.apps.googleusercontent.com"// replace it with your client id;
+			
+
+			$.ajax({
+				type: 'POST',
+				url: "https://www.googleapis.com/oauth2/v4/token",
+				data: {code:code
+					,redirect_uri:redirect_uri,
+					client_secret:client_secret,
+				client_id:client_id,
+				scope:scope,
+				grant_type:"authorization_code"},
+				dataType: "json",
+				success: function(resultData) {
+				   
+					
+				   localStorage.setItem("accessToken",resultData.access_token);
+				   localStorage.setItem("refreshToken",resultData.refreshToken);
+				   localStorage.setItem("expires_in",resultData.expires_in);
+				   window.history.pushState({}, document.title, "/Drive");
+		 
+				}
+		  });
+
+		});
+	</script>
+	
+</head>
+
+<body>
+	<div class="header">
+        <img src="https://cdn4.iconfinder.com/data/icons/small-n-flat/24/notepad-512.png" />
+        <span style="margin-top: 35px;" id="head">Authenticated</span>
+    </div>
+	<div class="sidenav">
+        <a href="http://localhost:8888/Home">&nbsp<i class="fas fa-home"></i>&nbsp Home</a>
+        <a href="http://localhost:8888/Notepad">&nbsp<i class="fas fa-edit"></i>&nbsp Editor</a>
+        <a href="http://localhost:8888/MyFiles">&nbsp<i class="fas fa-file-alt"></i>&nbsp&nbsp My files</a>
+		<a href="http://localhost:8888/SharedWithMe">&nbsp<i class="fas fa-users"></i>&nbsp&nbspShared With Me</a>
+		<a href="http://localhost:8888/Uploadfiles">&nbsp<i class="fa fa-upload" aria-hidden="true"></i>&nbsp&nbspUpload</a>
+		<a href="http://localhost:8888/Home/logout">&nbsp<i class="fas fa-sign-out-alt"></i>&nbsp&nbsp Logout</a>
+    </div>
+	
+   <div id="main">
+   
+	   <h3 style="font-size:30px;">Congratulations, you have been authenticated to use Google Drive</h3>
+
+		<p style="font-size:20px;margin-top: 20px">Now you can open any of your files, and export them to your drive</p>
+		<p style="font-size:20px;">To change the Google Account, simply go back to the Home page, and click on the authentication link again!</p>
+		<p style="font-size:16px;">Happy exporting!</p>
+		<img id="drivelink" src="../static/images/auth.png"/>
+
+
+   </div>
+</body>
+</html>

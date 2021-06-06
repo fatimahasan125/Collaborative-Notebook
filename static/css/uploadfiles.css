@@ -1,0 +1,154 @@
+﻿body {
+  font-family:Helvetica;
+  margin: 0;
+}
+
+#head{
+    font-size: 30px;
+    color: darksalmon;
+    position: relative;
+    margin-left: 10px;
+    top: -20px;
+    font-family: "SharpGroteskWide";
+}
+
+.header{
+    background-color: #F2F4F4;
+}
+
+.sidenav {
+  height: 100%;
+  width: 220px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: white;
+  overflow-x: hidden;
+  padding-top: 20px;
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12);
+}
+
+.sidenav a {
+  padding: 15px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #565251;
+  display: block;
+  font-family: Helvetica;
+  
+}
+
+.sidenav a:hover {
+  color: darksalmon;
+}
+
+.main {
+  margin-top: 80px;
+  margin-left: 270px; 
+  font-size: 20px; 
+  font-family: Helvetica;
+  font-weight: 200;
+  border-style:dashed;
+  max-width: 500px;
+  max-height:430px;
+  border-radius: 10px;
+  border-width: 1px;
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16);
+  border-color: lightgrey;
+  padding: 4%;
+}
+#files{
+  padding: 6px;
+  font-size: 17px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+button{
+     padding: 6px;
+     font-size: 17px;
+     cursor: pointer;
+    border-radius: 8px;
+
+}
+#upload{
+    margin-right: 2%;
+}
+@media screen and (max-width: 450px) {
+  .sidenav a {font-size: 18px;}
+  #head{font-size:20px;margin-left:0px;}
+}
+
+.header>img{
+	max-height: 50px;
+    max-width: 50px;
+    margin-bottom: 10px;
+    margin-left: 230px;
+    padding-top: 10px;
+    padding-left: 5px;
+}
+#upload{
+    float:right;
+}
+
+@media screen and (max-width: 600px) {
+    .sidenav {width: 180px;}
+  .main{
+      margin-left: 200px;
+  }
+}
+
+@media screen and (max-width: 744px) {
+    #progress-wrp{
+        margin-top:50px !important;
+    }
+    #upload{
+        float:left;
+        margin-left: 35%;
+    }
+}
+@media screen and (max-width: 400px) {
+  .sidenav {width: 120px;}
+  .sidenav a{font-size: 10px;}
+  div.main{margin-left:140px;font-size:18px;}
+  .header>img{margin-left:140px;}
+  
+}
+
+#progress-wrp {
+    border: 1px solid blue;
+    padding: 1px;
+    position: relative;
+    height: 30px;
+    border-radius: 3px;
+    margin: 10px;
+    text-align: left;
+    background: #fff;
+    box-shadow: inset 1px 3px 6px rgba(0, 0, 0, 0.12);
+  }
+  
+  #progress-wrp .progress-bar {
+    height: 100%;
+    border-radius: 3px;
+    background-color: lawngreen;
+    width: 0;
+    box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 0.11);
+  }
+  
+  #progress-wrp .status {
+    top: 3px;
+    left: 45%;
+    position: absolute;
+    display: inline-block;
+    color: #000000;
+  }
+  
+  button#upload{
+	  background-color: limegreen;
+  }
+  
+  input#files{
+	  background-color: yellow;
+  }
+  
+  

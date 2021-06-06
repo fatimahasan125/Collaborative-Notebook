@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>My Files</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link href="../static/css/MyFilesStyleSheet.css" rel="stylesheet" />
+	
+	<script>
+	
+        var page = 0;
+			
+		function nextPage() {
+		    var xhttp = new XMLHttpRequest();
+			var p = page +1;
+			xhttp.open("GET", "http://localhost:8888/SharedWithMe/next?page=" + p, true);
+			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhttp.send();
+			  
+			
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.responseText!="") {
+					
+					document.getElementById("container").innerHTML =
+					this.responseText;
+					page++;
+				}
+		    };
+		}
+		
+		function prevPage() {
+		    var xhttp = new XMLHttpRequest();
+			var p = page -1;
+			xhttp.open("GET", "http://localhost:8888/SharedWithMe/next?page=" + p, true);
+			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhttp.send();
+			  
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.responseText!="") {
+					document.getElementById("container").innerHTML =
+					this.responseText;
+					page--;
+				}
+		    };
+		}
+			
+			
+		function download(dname, docHtml){
+			var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
+				var postHtml = "</body></html>";
+				var element = docHtml;
+				var html = preHtml+element+postHtml;
+				var filename = dname;
+				var name = filename + '.doc';
+				var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
+				var downloadLink = document.createElement("a");
+				document.body.appendChild(downloadLink);
+				downloadLink.href = url;
+				downloadLink.download = name;
+				downloadLink.click();
+				document.body.removeChild(downloadLink);
+		}
+		
+		function downloadAjax(docid){
+		
+			xhttp = new XMLHttpRequest();
+			var s ="";
+			for(var i=1; i<docid.length; i++)
+				s+=docid[i];
+			var integer = parseInt(s, 10);
+			
+			xhttp.open("GET", "http://localhost:8888/SharedWithMe/download?id=" + integer, true);
+			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhttp.send();
+			  
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.responseText!="") {
+					var j = JSON.parse(this.responseText);
+					download(j.name, j.docHtml);
+				}
+		    };
+		}
+		
+		function editDoc(docid){
+			
+			var s ="";
+			for(var i=1; i<docid.length; i++)
+				s+=docid[i];
+			var integer = parseInt(s, 10);
+			
+			
+			window.location.replace("http://localhost:8888/Notepad/sharededit?id=" + integer);
+	
+		
+		}
+		
+		
+	</script>
+	
+</head>
+
+
+<body>
+    <div class="header">
+        <img src="https://cdn4.iconfinder.com/data/icons/small-n-flat/24/notepad-512.png" />
+        <span id="head">Shared With Me</span>
+ 
+    </div>
+
+
+    <div class="sidenav">
+        <a href="http://localhost:8888/Home">&nbsp<i class="fas fa-home"></i>&nbsp Home</a>
+        <a href="http://localhost:8888/Notepad">&nbsp<i class="fas fa-edit"></i>&nbsp Editor</a>
+        <a href="http://localhost:8888/MyFiles">&nbsp<i class="fas fa-file-alt"></i>&nbsp&nbsp My files</a>
+		<a style="color:darksalmon;" href="#SharedWithMe">><i class="fas fa-users"></i>&nbsp&nbspShared With Me</a>
+        <a href="http://localhost:8888/Uploadfiles">&nbsp<i class="fa fa-upload" aria-hidden="true"></i>&nbsp&nbspUpload</a>
+		<a href="http://localhost:8888/Home/logout">&nbsp<i class="fas fa-sign-out-alt"></i>&nbsp&nbsp Logout</a>
+
+    </div>
+
+    
+
+    <div class="main" id="container">		
+		<!-- content -->
+    </div>
+	
+</body>
+</html>

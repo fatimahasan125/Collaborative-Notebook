@@ -1,0 +1,348 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="../static/css/Notepad.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script> 
+        $(document).ready(function (e) {
+		
+			$("#save").click(function(){
+				$.ajax({
+					url: "http://localhost:8888/Notepad",
+					type: "POST",
+					data: {
+						docId: $("#docname").attr('name'),
+						doctext: $("#doc").html(),
+						docname: $("#docname").val()
+					},
+					success: function(){
+						alert("Saved successfully");
+					}, 
+					error: function(err){
+						alert(err);
+					}
+				
+				});
+			});
+			
+			$("#download").click(function(){
+				var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
+				var postHtml = "</body></html>";
+				element = $("#doc").html();
+				var html = preHtml+element+postHtml;
+				
+				filename = $("#docname").val();
+				var name = filename + '.doc';
+				var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
+				var downloadLink = document.createElement("a");
+				document.body.appendChild(downloadLink);
+				downloadLink.href = url;
+				downloadLink.download = name;
+				downloadLink.click();
+				document.body.removeChild(downloadLink);
+			});
+			
+			
+			/*$("body").on('DOMSubtreeModified', "#doc", function() {
+			
+				$.ajax({
+					url: "http://localhost:8888/Notepad",
+					type: "POST",
+					data: {
+						docId: $("#docname").attr('name'),
+						doctext: $("#doc").html(),
+						docname: $("#docname").val()
+					},
+					success: function(){
+						alert("Saved successfully");
+					}, 
+					error: function(xhr, status, error){
+					
+						var errorMessage = xhr.status + ': ' + xhr.statusText;
+						alert('Error - ' + errorMessage);
+					}
+				
+				});
+			});*/
+			
+			$("#share").click(function(){
+				var email = prompt("Enter email of user you wish to share with");
+				
+				$.ajax({
+					url: "http://localhost:8888/Notepad/share",
+					type: "POST",
+					data: {
+						docId: $("#docname").attr('name'),
+						docname: $("#docname").val(),
+						person: email
+					},
+					success: function(res){
+						alert(res);
+					}, 
+					error: function(jqXHR, textStatus){
+						alert(textStatus);
+					}
+				
+				});
+				
+			});
+			
+
+
+            $("#fontname").change(function () {
+                document.execCommand("fontName", false, $(this).val().toString());
+
+            });
+
+            $("#favcolor").change(function () {
+                document.execCommand("foreColor", false, $(this).val().toString());
+            });
+
+
+            $(".dropdown-menu li a").click(function () {
+
+                var s = $(this).text();        //User selected value
+                if (s == 'Undo')
+                    document.execCommand("undo", false, "");
+                else if (s == 'Redo')
+                    document.execCommand("redo", false, "");
+
+            });
+
+            $("#fontsize").change(function () {
+                var s = document.getElementById("fontsize").value;
+				
+                document.execCommand("fontSize", true, s);
+				
+				//document.getElementById("doc").style.fontSize = s;
+            });
+			
+			
+
+			function stripQueryStringAndHashFromPath(url) {
+				return url.split("?")[0].split("#")[0];
+			}   
+
+			var Upload = function (file) {
+				this.file = file;
+			};
+			
+			Upload.prototype.getType = function() {
+				localStorage.setItem("type",this.file.type);
+				return this.file.type;
+			};
+			Upload.prototype.getSize = function() {
+				localStorage.setItem("size",this.file.size);
+				return this.file.size;
+			};
+			Upload.prototype.getName = function() {
+				
+				return this.file.name;
+			};
+			Upload.prototype.doUpload = function () {
+				var that = this;
+				var formData = new FormData();
+				// add assoc key values, this will be posts values
+				
+				var metadata = {
+					'title': $("#docname").val() // Filename at Google Drive
+				};
+				
+				formData.append("metadata", new Blob([JSON.stringify(metadata)], {type: 'application/json'}));
+				formData.append("file", this.file);
+				
+				formData.append("upload_file", true);
+			
+				$.ajax({
+					type: "POST",
+					beforeSend: function(request) {
+						request.setRequestHeader("Authorization", "Bearer" + " " + localStorage.getItem("accessToken"));
+						
+					},
+					url: "https://www.googleapis.com/upload/drive/v2/files",
+					
+					data:{
+						uploadType:"media"
+					},
+					xhr: function () {
+						var myXhr = $.ajaxSettings.xhr();
+						myXhr.upload;
+						return myXhr;
+					},
+					success: function (data) {
+						alert("Uploaded!");
+					},
+					error: function (error) {
+						alert(error);
+					},
+					async: true,
+					data: formData,
+					cache: false,
+					contentType: false,
+					processData: false,
+					timeout: 60000
+				});
+			};
+			
+
+			$("#upload").on("click", function (e) {
+			
+				var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
+				var postHtml = "</body></html>";
+				element = $("#doc").html();
+				var html = preHtml+element+postHtml;
+
+				var file = new File([html], $("#docname").val()+'.html');
+				var upload = new Upload(file);
+			
+				upload.doUpload();
+				
+			});
+			
+			
+        });
+		
+		function edit(command, value) {
+                document.execCommand(command, false, value);
+            }
+    </script>
+</head>
+<body>
+    <div id="notepad" class="container">
+        <div id="notepadheader" class="container">
+            <div class="row">
+                <div class="image">
+                    <img class="img-responsive center-block" src="https://cdn4.iconfinder.com/data/icons/small-n-flat/24/notepad-512.png" alt="Notepad">
+                </div>
+                <div class="col-xs-8">
+               
+                    <div style="margin-left:-2%; margin-bottom:-1.2%; margin-top:30px; padding-bottom:2%">
+                        <div class="dropdown">
+                            <button  class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                File
+                            </button>
+                            <ul class="dropdown-menu" id="dwn">
+								<li><button id="download">Download</button></li>
+								<li><button id="save" >Save</button></li>
+                                
+                            </ul>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                Edit
+                            </button>
+                            <ul class="dropdown-menu" id="edit">
+                                <li><a href="#">Undo</a></li>
+                                <li><a href="#">Redo</a></li>
+                
+                            </ul>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                Share
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><button id="share" >Share With</button></li>
+                            </ul>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                Help
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Help</a></li>
+                                <li><a href="#">Send Feedback</a></li>
+                            </ul>
+                        </div>
+						<div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                Google Drive
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><button id="upload" >Upload to drive</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="buttons" class="row" >
+                <div style="margin-left:2%; margin-top:0.5%;margin-bottom:0.5%">
+                    <select id="fontname" class="dropdownn scrollable-menu" style="font-size:14px;background-color:lavender; margin-top: 2px;padding: 0.5%;" role="menu">
+                        <option >Arial</option>
+                        <option >Calibri</option>
+                        <option >Cambria</option>
+                        <option>Consolas</option>
+                        <option>Dante</option>
+                        <option >Georgia</option> 
+                        <option>Segoe UI Emoji </option> 
+                        <option>Verdana</option>
+                        <option selected>Times New Roman</option>
+                    </select>
+                    <select id="fontsize" class="dropdownn scrollable-menu" style="font-size:14px;background-color:lavender; margin-top: 2px;padding: 0.5%;"  role="menu">
+                        <option>8</option><option>9</option>
+                        <option>10</option><option>11</option>
+                        <option selected>12</option><option> 13</option>
+                        <option> 14</option><option> 16</option><option> 20</option>
+                        <option> 22</option><option> 24</option><option> 28</option>
+                        <option> 30</option><option> 32</option><option> 34</option>
+                        <option> 36</option><option> 38</option><option> 40</option>
+                        <option> 45</option> <option> 50</option><option> 60</option>
+                      
+                    </select>
+                    
+                    <button type="button"  id="bold" class="btn btn-default" aria-label="Left Align" style="margin-right:0;" onclick="edit('bold'); jQuery(this).toggleClass('active')" >
+                        <span style="font-weight:800;font-size:15px">B</span>
+                    </button>
+                    <button type="button" id="italic" class="btn btn-default" aria-label="Left Align" style="margin-right:0;" onclick="edit('italic'); jQuery(this).toggleClass('active')">
+                        <span style="font-style:italic;font-size:15px;font-weight:600;">I</span>
+                    </button>
+                    <button type="button" id="underline" class="btn btn-default" aria-label="Left Align" style="margin-right:0;" onclick="edit('underline'); jQuery(this).toggleClass('active')">
+                        <span style="text-decoration:underline;font-size:15px;font-weight:600">U</span>
+                    </button>
+                    <input type="color" id="favcolor" name="favcolor" value="#0000">
+
+                    <button type="button" id ="leftAlign"class="btn btn-default" aria-label="Left Align" style="margin-right:0;" onclick="edit('justifyLeft')">
+                        <span class="glyphicon glyphicon-align-left Align" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" id="centreAlign"class="btn btn-default" aria-label="Left Align" style="margin-left:0;" onclick="edit('justifyCenter')">
+                        <span class="glyphicon glyphicon-align-center Align" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" id="rightAlign"class="btn btn-default" aria-label="Left Align" style="margin:0;" onclick="edit('justifyRight');">
+                        <span class="glyphicon glyphicon-align-right Align" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" id="justify" class="btn btn-default" aria-label="Left Align" onclick="edit('justifyFull')">
+                        <span class="glyphicon glyphicon-align-justify Align" aria-hidden="true"></span>
+                    </button>
+
+                    <button type="button" class="btn btn-default" aria-label="Left Align" onclick="edit('outdent')">
+                        <span class="glyphicon glyphicon-indent-left" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-default" aria-label="Left Align" onclick="edit('indent')">
+                        <span class="glyphicon glyphicon-indent-right" aria-hidden="true"></span>
+                    </button>
+                    
+                    <button type="button" id="list"class="btn btn-default" aria-label="Left Align" onclick="edit('insertUnorderedList'); jQuery(this).toggleClass('active')">
+                        <span class="glyphicon glyphicon glyphicon-list" aria-hidden="true"></span>
+                    </button>
+
+                </div>
+                
+            </div>
+			
+			
+			</div>
+			
+		<!-- content -->
+			
+        </div>
+        
+		
+    
+</body>
+
+</html>

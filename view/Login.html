@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Journal Login</title>
+	<meta charset="utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link href="../static/css/LoginStyleSheet.css" rel="stylesheet" />
+	
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+</head>
+<body>
+	<!-- content -->
+    <div id="outer-container" class="container">
+        <div class="image container">
+            <img class="img-responsive center-block" src="https://cdn4.iconfinder.com/data/icons/small-n-flat/24/notepad-512.png" alt="Notepad">
+        </div>
+        <div class="header">
+            <h1>Log In</h1>
+            <h5>to continue to Journal</h5>
+        </div>
+
+		<form method="POST" action="./Login">
+			<div class="form-group">
+				<input id="usr" type="text" name="email" placeholder="Email"  class="form-control" required>
+			</div>
+			<div class="form-group">
+				<input id="pwd" type="password" name="password" placeholder="Password" class="form-control" required>
+			</div>
+			<input type="submit" id="submit-button" value="Login"/>
+		</form>
+        <div class="create-acc">
+            <p>Dont have an account?</p>
+            <a id="create" href="http://localhost:8888/SignUp">Create Account</a>
+        </div>
+    </div>
+
+</body>
+</html>
