@@ -28,7 +28,10 @@ nodemailer
 Each module can be installed using npm. For example to install node, all you have to do is execute the following command \
 `npm install node`
 
-Go to the project directory and run the following command: \
+Next, you have to change the connection string and database name for mongodb as well as mention the base path in the following file: \
+config/settings.js
+
+Finally, go to the project directory and run the following command: \
 `node main.js`
 
 Then open the browser and go to localhost:8888
