@@ -43,3 +43,5 @@ https://user-images.githubusercontent.com/68266703/120941822-60bf9480-c73e-11eb-
 
 
 
+Project partner: \
+Nuzha Khalid
