@@ -29,7 +29,15 @@ Each module can be installed using npm. For example to install node, all you hav
 `npm install node`
 
 Next, you have to change the connection string and database name for mongodb as well as mention the base path in the following file: \
-config/settings.js
+config/settings.js \
+There should be 3 collections in the database:
+1) users 
+2) documents 
+3) online users 
+
+The users collection has users' name, email and password stored. The documents collection has author, name, docText, dateCreated and collaborators fields.
+The online users collection has the emails of users currently logged in. 
+
 
 Finally, go to the project directory and run the following command: \
 `node main.js`
